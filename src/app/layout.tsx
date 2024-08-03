@@ -21,6 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <link rel='icon' href='/favicon.ico' sizes='any' />
+      </head>
+
       <body
         className={cn(
           'mx-6 mb-24 mt-12 max-w-2xl font-poppins antialiased lg:mx-auto',
