@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
 export default function Home() {
   const [{ error, shortUrl, msg }, formAction] = useFormState(
@@ -38,14 +38,30 @@ export default function Home() {
             id='url'
             name='url'
           />
-          <Button type='submit'>Shorten</Button>
+          <ShortenBtn />
         </div>
         {error ? (
           <p className='mt-1 text-sm text-destructive'>{error}</p>
         ) : null}
+
+        {msg ? <p className='mt-1 text-sm text-destructive'>{msg}</p> : null}
       </form>
 
       {shortUrl ? <CopyUrl link={shortUrl} /> : null}
     </main>
+  );
+}
+
+function ShortenBtn() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type='submit'>
+      {pending ? (
+        <span className='animate-bounce text-3xl'>...</span>
+      ) : (
+        'Shorten'
+      )}
+    </Button>
   );
 }
