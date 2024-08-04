@@ -1,3 +1,4 @@
+import ListUrls from '@/components/list-urls';
 import URLComponent from '@/components/url-component';
 import React from 'react';
 
@@ -10,6 +11,8 @@ export default function Home() {
       </div>
 
       <URLComponent />
+
+      <ListUrls />
     </main>
   );
 }

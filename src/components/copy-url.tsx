@@ -12,10 +12,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Input } from './ui/input';
+import { Card, CardHeader } from './ui/card';
+import { cn } from '@/lib/utils';
 
-export default function CopyUrl({ link }: { link: string }) {
-  const textRef = React.useRef<HTMLInputElement>(null);
+export default function CopyUrl({
+  link,
+  mainUrl,
+}: {
+  link: string;
+  mainUrl?: string;
+}) {
+  const textRef = React.useRef<HTMLElement>(null);
 
   function copyTextToClipboard(text: string) {
     navigator.clipboard
@@ -28,24 +35,28 @@ export default function CopyUrl({ link }: { link: string }) {
       });
   }
 
-  function onCopyBtnClick() {
-    document.getElementById('default-message')?.classList.add('hidden');
-    document.getElementById('success-message')?.classList.remove('hidden');
-    document.getElementById('success-message')?.classList.add('inline-flex');
+  const defaultMessageId = `default-message-${link}`;
+  const successMessageId = `success-message-${link}`;
+  const qrCodeId = `qr-code-${link}`;
 
-    copyTextToClipboard(textRef.current!.value);
+  function onCopyBtnClick() {
+    document.getElementById(defaultMessageId)?.classList.add('hidden');
+    document.getElementById(successMessageId)?.classList.remove('hidden');
+    document.getElementById(successMessageId)?.classList.add('inline-flex');
+
+    copyTextToClipboard(textRef.current?.textContent!);
 
     setTimeout(() => {
-      document.getElementById('default-message')?.classList.remove('hidden');
-      document.getElementById('success-message')?.classList.add('hidden');
+      document.getElementById(defaultMessageId)?.classList.remove('hidden');
+      document.getElementById(successMessageId)?.classList.add('hidden');
       document
-        .getElementById('success-message')
+        .getElementById(successMessageId)
         ?.classList.remove('inline-flex');
     }, 1000);
   }
 
   function handleQrDownload() {
-    const qrCode = document.getElementById('qr-code');
+    const qrCode = document.getElementById(qrCodeId);
     if (qrCode) {
       htmlToImage.toJpeg(qrCode, { quality: 0.95 }).then(function (dataUrl) {
         var link = document.createElement('a');
@@ -57,57 +68,60 @@ export default function CopyUrl({ link }: { link: string }) {
   }
 
   return (
-    <div className='my-4 flex flex-row items-center gap-2'>
-      <Input
-        id='copy-text'
-        className='cursor-text'
-        value={link}
-        ref={textRef}
-        readOnly
-      />
-      <Button
-        data-copy-to-clipboard-target='copy-text'
-        onClick={() => onCopyBtnClick()}
-      >
-        <span id='default-message'>Copy</span>
-        <span id='success-message' className='hidden items-center'>
-          <svg
-            className='me-1.5 h-3 w-3 text-white'
-            aria-hidden='true'
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 16 12'
-          >
-            <path
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M1 5.917 5.724 10.5 15 1.5'
-            />
-          </svg>
-          Copied!
-        </span>
-      </Button>
+    <Card className='flex flex-row items-center justify-between p-0'>
+      <div>
+        <CardHeader
+          className={cn('p-3 text-sm font-medium', mainUrl && 'pb-0')}
+        >
+          <span ref={textRef}>{link}</span>
+        </CardHeader>
+        {mainUrl ? <p className='pb-3 pl-3 text-xs'>{mainUrl}</p> : null}
+      </div>
+      <div className='flex flex-row items-center gap-2 p-2 pr-3'>
+        <Button
+          data-copy-to-clipboard-target='copy-text'
+          onClick={() => onCopyBtnClick()}
+        >
+          <span id={defaultMessageId}>Copy</span>
+          <span id={successMessageId} className='hidden items-center'>
+            <svg
+              className='me-1.5 h-3 w-3 text-white'
+              aria-hidden='true'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 16 12'
+            >
+              <path
+                stroke='currentColor'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M1 5.917 5.724 10.5 15 1.5'
+              />
+            </svg>
+            Copied!
+          </span>
+        </Button>
 
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button size='icon' className='w-12'>
-            <QrCodeIcon className='size-6' />
-          </Button>
-        </DialogTrigger>
-        <DialogContent aria-describedby={undefined}>
-          <DialogTitle className='text-base'>{link}</DialogTitle>
-          <div className='flex flex-col items-center gap-4'>
-            <div id='qr-code' className='bg-white p-1'>
-              <QRCode value={link} />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size='icon' className='w-12'>
+              <QrCodeIcon className='size-6' />
+            </Button>
+          </DialogTrigger>
+          <DialogContent aria-describedby={undefined}>
+            <DialogTitle className='text-base'>{link}</DialogTitle>
+            <div className='flex flex-col items-center gap-4'>
+              <div id={qrCodeId} className='bg-white p-1'>
+                <QRCode value={link} />
+              </div>
             </div>
-          </div>
-          <DialogFooter className='mx-auto'>
-            <Button onClick={handleQrDownload}>Download</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+            <DialogFooter className='mx-auto'>
+              <Button onClick={handleQrDownload}>Download</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </Card>
   );
 }
