@@ -4,7 +4,7 @@ import { pgTableCreator, serial, text, timestamp } from 'drizzle-orm/pg-core';
 export const createTable = pgTableCreator((name) => `miniel_${name}`);
 
 export const uri = createTable('uri', {
-  id: serial('id').unique().notNull(),
+  id: serial('id').unique().notNull().primaryKey(),
   shortUrlId: text('short_url_id').unique().notNull(),
   mainUrl: text('main_url').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -15,7 +15,7 @@ export const uriRelations = relations(uri, ({ many }) => ({
 }));
 
 export const analytics = createTable('analytics', {
-  id: serial('id').unique().notNull(),
+  id: serial('id').unique().notNull().primaryKey(),
   uriId: text('uri_id')
     .references(() => uri.shortUrlId, { onDelete: 'cascade' })
     .notNull(),
