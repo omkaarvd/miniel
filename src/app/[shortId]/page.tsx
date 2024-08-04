@@ -1,4 +1,4 @@
-import { getMainUrl } from '@/actions/url';
+import { redirectToMainUrl } from '@/actions/url';
 import { db } from '@/db';
 import { notFound, redirect } from 'next/navigation';
 
@@ -21,7 +21,7 @@ export default async function Page({
 }: {
   params: { shortId: string };
 }) {
-  const mainUrl = await getMainUrl(shortId);
+  const mainUrl = await redirectToMainUrl(shortId);
 
   if (!mainUrl) {
     return notFound();

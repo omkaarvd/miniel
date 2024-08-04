@@ -57,7 +57,7 @@ export const shortenURLFormAction = async (
   }
 };
 
-export const getMainUrl = async (shortId: string) => {
+export const redirectToMainUrl = async (shortId: string) => {
   try {
     const existingUri = await db.query.uri.findFirst({
       where: (uri, { eq }) => eq(uri.shortUrlId, shortId),
