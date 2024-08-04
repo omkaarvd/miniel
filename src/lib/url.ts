@@ -7,8 +7,11 @@ export const convertToURL = ({
   baseUrl: whatwg.URLRecord;
   shortUrlId: string;
 }) => {
-  return whatwg.serializeURL({
+  const url = whatwg.serializeURL({
     ...baseUrl,
     path: `/${shortUrlId}`,
   });
+
+  const parsedUrl = new URL(url);
+  return `${parsedUrl.host}${parsedUrl.pathname}`;
 };
