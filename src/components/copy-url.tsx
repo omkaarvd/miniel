@@ -4,7 +4,7 @@ import React from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
-export default function CopyUrl() {
+export default function CopyUrl({ link }: { link: string }) {
   const textRef = React.useRef<HTMLInputElement>(null);
 
   function copyTextToClipboard(text: string) {
@@ -39,7 +39,7 @@ export default function CopyUrl() {
       <Input
         id='copy-text'
         className='cursor-text'
-        value='link'
+        value={link}
         ref={textRef}
         readOnly
       />
