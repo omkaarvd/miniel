@@ -59,10 +59,14 @@ export default function CopyUrl({
     const qrCode = document.getElementById(qrCodeId);
     if (qrCode) {
       htmlToImage.toJpeg(qrCode, { quality: 0.95 }).then(function (dataUrl) {
-        var link = document.createElement('a');
-        link.download = 'qrcode.jpeg';
-        link.href = dataUrl;
-        link.click();
+        const linkc = document.createElement('a');
+
+        const parts = link.split('/');
+        const shortUrlId = parts[parts.length - 1];
+
+        linkc.download = shortUrlId + '.jpeg';
+        linkc.href = dataUrl;
+        linkc.click();
       });
     }
   }
