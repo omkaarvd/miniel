@@ -69,15 +69,24 @@ export default function CopyUrl({
 
   return (
     <Card className='flex flex-row items-center justify-between p-0'>
-      <div>
+      <div className='min-w-0 flex-1'>
         <CardHeader
-          className={cn('p-3 text-sm font-medium', mainUrl && 'pb-0')}
+          className={cn(
+            'whitespace-nowrap p-3 text-sm font-medium',
+            mainUrl && 'pb-0',
+          )}
         >
-          <span ref={textRef}>{link}</span>
+          <span ref={textRef} className='block overflow-hidden text-ellipsis'>
+            {link}
+          </span>
         </CardHeader>
-        {mainUrl ? <p className='pb-3 pl-3 text-xs'>{mainUrl}</p> : null}
+        {mainUrl ? (
+          <p className='overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs'>
+            {mainUrl}
+          </p>
+        ) : null}
       </div>
-      <div className='flex flex-row items-center gap-2 p-2 pr-3'>
+      <div className='flex flex-shrink-0 flex-row items-center gap-2 p-2 pr-3'>
         <Button
           data-copy-to-clipboard-target='copy-text'
           onClick={() => onCopyBtnClick()}
@@ -105,16 +114,17 @@ export default function CopyUrl({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button size='icon' className='w-12'>
+            <Button size='icon' className='w-10'>
               <QrCodeIcon className='size-6' />
             </Button>
           </DialogTrigger>
-          <DialogContent aria-describedby={undefined}>
+          <DialogContent
+            aria-describedby={undefined}
+            className='w-5/6 rounded-lg sm:w-full'
+          >
             <DialogTitle className='text-base'>{link}</DialogTitle>
-            <div className='flex flex-col items-center gap-4'>
-              <div id={qrCodeId} className='bg-white p-1'>
-                <QRCode value={link} />
-              </div>
+            <div id={qrCodeId} className='mx-auto bg-white p-1'>
+              <QRCode value={link} />
             </div>
             <DialogFooter className='mx-auto'>
               <Button onClick={handleQrDownload}>Download</Button>
