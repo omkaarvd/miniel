@@ -1,5 +1,8 @@
 'use server';
 
+import { db } from '@/db';
+import { uri } from '@/db/schema';
+import { convertToURL } from '@/lib/url';
 import { nanoid } from 'nanoid';
 import whatwg from 'whatwg-url';
 
@@ -26,31 +29,26 @@ export const shortenURLFormAction = async (
 
   const newUrl = whatwg.serializeURL(parsedUrl, true);
 
-  // const existingUri = await db.query.uri.findFirst({
-  //   where: (uri, { eq }) => eq(uri.mainUrl, newUrl),
-  // });
+  const existingUri = await db.query.uri.findFirst({
+    where: (uri, { eq }) => eq(uri.mainUrl, newUrl),
+  });
 
-  // if (existingUri) {
-  //   return {
-  //     msg: 'URL already shortened!',
-  //     shortUrl: existingUri.shortUrlId,
-  //   };
-  // }
+  if (existingUri) {
+    return {
+      msg: 'URL already shortened!',
+      shortUrl: convertToURL({ baseUrl, shortUrlId: existingUri.shortUrlId }),
+    };
+  }
 
   try {
     const shortUrlId = nanoid(8);
 
-    const shortUrl = whatwg.serializeURL({
-      ...baseUrl,
-      path: `/${shortUrlId}`,
+    await db.insert(uri).values({
+      shortUrlId: shortUrlId,
+      mainUrl: newUrl,
     });
 
-    // await db.insert(uri).values({
-    //   shortUrlId: shortUrlId,
-    //   mainUrl: newUrl,
-    // });
-
-    return { msg: 'Success', shortUrl };
+    return { shortUrl: convertToURL({ baseUrl, shortUrlId }) };
   } catch (error) {
     if (error instanceof Error) console.error(error.message);
     else console.error(error);
