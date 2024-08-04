@@ -1,7 +1,16 @@
 'use client';
 
+import * as htmlToImage from 'html-to-image';
+import { QrCodeIcon } from 'lucide-react';
 import React from 'react';
+import QRCode from 'react-qr-code';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from './ui/dialog';
 import { Input } from './ui/input';
 
 export default function CopyUrl({ link }: { link: string }) {
@@ -32,6 +41,18 @@ export default function CopyUrl({ link }: { link: string }) {
         .getElementById('success-message')
         ?.classList.remove('inline-flex');
     }, 1000);
+  }
+
+  function handleQrDownload() {
+    const qrCode = document.getElementById('qr-code');
+    if (qrCode) {
+      htmlToImage.toJpeg(qrCode, { quality: 0.95 }).then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'qrcode.jpeg';
+        link.href = dataUrl;
+        link.click();
+      });
+    }
   }
 
   return (
@@ -67,6 +88,24 @@ export default function CopyUrl({ link }: { link: string }) {
           Copied!
         </span>
       </Button>
+
+      <Dialog>
+        <DialogTrigger>
+          <Button size='icon' className='w-12'>
+            <QrCodeIcon className='size-6' />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <div className='flex flex-col items-center gap-4'>
+            <div id='qr-code' className='bg-white p-1'>
+              <QRCode value={link} />
+            </div>
+          </div>
+          <DialogFooter className='mx-auto'>
+            <Button onClick={handleQrDownload}>Download</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -3,6 +3,7 @@ yarn.lock
 
 README.md
 
+/migrations
 /node_modules
 /.pnp
 .pnp.js
