@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
 import { Input } from './ui/input';
@@ -90,12 +91,13 @@ export default function CopyUrl({ link }: { link: string }) {
       </Button>
 
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button size='icon' className='w-12'>
             <QrCodeIcon className='size-6' />
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
+          <DialogTitle className='text-base'>{link}</DialogTitle>
           <div className='flex flex-col items-center gap-4'>
             <div id='qr-code' className='bg-white p-1'>
               <QRCode value={link} />
