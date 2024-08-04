@@ -8,13 +8,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{ts,tsx,json}\""
+    "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "db:introspect": "drizzle-kit introspect --config=drizzle.config.ts",
+    "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
+    "db:migrate": "tsx --env-file=.env.local src/db/migrate.ts",
+    "db:studio": "drizzle-kit studio --config=drizzle.config.ts",
+    "db:drop": "drizzle-kit drop --config=drizzle.config.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.9.4",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.32.1",
     "lucide-react": "^0.424.0",
     "nanoid": "^5.0.7",
     "next": "14.2.5",
@@ -22,19 +30,24 @@
     "react-dom": "^18",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "whatwg-url": "^14.0.0"
+    "whatwg-url": "^14.0.0",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/whatwg-url": "^11.0.5",
+    "@types/ws": "^8.5.12",
+    "drizzle-kit": "^0.23.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.16.5",
     "typescript": "^5"
   }
 }

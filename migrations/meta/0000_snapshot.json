@@ -1,0 +1,107 @@
+{
+  "id": "32c0b091-5ebc-46ae-92da-fcd56e834e34",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.miniel_analytics": {
+      "name": "miniel_analytics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uri_id": {
+          "name": "uri_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "visited_at": {
+          "name": "visited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "miniel_analytics_uri_id_miniel_uri_short_url_id_fk": {
+          "name": "miniel_analytics_uri_id_miniel_uri_short_url_id_fk",
+          "tableFrom": "miniel_analytics",
+          "tableTo": "miniel_uri",
+          "columnsFrom": ["uri_id"],
+          "columnsTo": ["short_url_id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "miniel_analytics_id_unique": {
+          "name": "miniel_analytics_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["id"]
+        }
+      }
+    },
+    "public.miniel_uri": {
+      "name": "miniel_uri",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "short_url_id": {
+          "name": "short_url_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "main_url": {
+          "name": "main_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "miniel_uri_id_unique": {
+          "name": "miniel_uri_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["id"]
+        },
+        "miniel_uri_short_url_id_unique": {
+          "name": "miniel_uri_short_url_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["short_url_id"]
+        }
+      }
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
