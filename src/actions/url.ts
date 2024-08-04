@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/db';
-import { uri } from '@/db/schema';
+import { analytics, uri } from '@/db/schema';
 import { convertToURL } from '@/lib/url';
 import { nanoid } from 'nanoid';
 import whatwg from 'whatwg-url';
@@ -54,5 +54,28 @@ export const shortenURLFormAction = async (
     else console.error(error);
 
     throw new Error('Error occured while adding url into database');
+  }
+};
+
+export const getMainUrl = async (shortId: string) => {
+  try {
+    const existingUri = await db.query.uri.findFirst({
+      where: (uri, { eq }) => eq(uri.shortUrlId, shortId),
+    });
+
+    if (!existingUri) return null;
+
+    const { mainUrl, shortUrlId } = existingUri;
+
+    await db.insert(analytics).values({
+      uriId: shortUrlId,
+    });
+
+    return mainUrl;
+  } catch (error) {
+    if (error instanceof Error) console.error(error.message);
+    else console.error(error);
+
+    throw new Error('Error occured while handling redirect');
   }
 };

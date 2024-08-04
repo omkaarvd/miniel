@@ -1,22 +1,31 @@
+import { getMainUrl } from '@/actions/url';
 import { db } from '@/db';
-import { analytics } from '@/db/schema';
-import { notFound } from 'next/navigation';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+
+export async function generateStaticParams() {
+  const urls = await db.query.uri.findMany({
+    columns: { shortUrlId: true },
+  });
+
+  if (!urls) {
+    return [{ shortId: '' }];
+  }
+
+  return urls.map(({ shortUrlId }) => {
+    return { shortId: shortUrlId };
+  });
+}
 
 export default async function Page({
   params: { shortId },
 }: {
   params: { shortId: string };
 }) {
-  const existingUri = await db.query.uri.findFirst({
-    where: (uri, { eq }) => eq(uri.shortUrlId, shortId),
-  });
+  const mainUrl = await getMainUrl(shortId);
 
-  if (!existingUri) notFound();
+  if (!mainUrl) {
+    return notFound();
+  }
 
-  await db.insert(analytics).values({
-    uriId: existingUri.shortUrlId,
-  });
-
-  redirect(existingUri.mainUrl);
+  return redirect(mainUrl);
 }

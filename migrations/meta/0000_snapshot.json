@@ -1,5 +1,5 @@
 {
-  "id": "32c0b091-5ebc-46ae-92da-fcd56e834e34",
+  "id": "336458f5-2747-46a4-90c6-d63a0f084580",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -11,7 +11,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "uri_id": {
@@ -34,8 +34,12 @@
           "name": "miniel_analytics_uri_id_miniel_uri_short_url_id_fk",
           "tableFrom": "miniel_analytics",
           "tableTo": "miniel_uri",
-          "columnsFrom": ["uri_id"],
-          "columnsTo": ["short_url_id"],
+          "columnsFrom": [
+            "uri_id"
+          ],
+          "columnsTo": [
+            "short_url_id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -45,7 +49,9 @@
         "miniel_analytics_id_unique": {
           "name": "miniel_analytics_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         }
       }
     },
@@ -56,7 +62,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "short_url_id": {
@@ -86,12 +92,16 @@
         "miniel_uri_id_unique": {
           "name": "miniel_uri_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         },
         "miniel_uri_short_url_id_unique": {
           "name": "miniel_uri_short_url_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["short_url_id"]
+          "columns": [
+            "short_url_id"
+          ]
         }
       }
     }

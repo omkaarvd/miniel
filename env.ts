@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const envVariables = z.object({
+  NODE_ENV: z.string(),
   NEXT_BASE_URL: z.string(),
   DATABASE_URL: z.string(),
 });
