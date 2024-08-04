@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS "miniel_uri" (
 	"short_url_id" text NOT NULL,
 	"main_url" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"expiry_time" timestamp DEFAULT '2024-08-04 22:19:09.947',
 	CONSTRAINT "miniel_uri_id_unique" UNIQUE("id"),
 	CONSTRAINT "miniel_uri_short_url_id_unique" UNIQUE("short_url_id")
 );

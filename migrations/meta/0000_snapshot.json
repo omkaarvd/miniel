@@ -1,5 +1,5 @@
 {
-  "id": "336458f5-2747-46a4-90c6-d63a0f084580",
+  "id": "90c23665-b671-4c0f-9688-d371dbb51117",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -83,6 +83,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "expiry_time": {
+          "name": "expiry_time",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-08-04 22:19:09.947'"
         }
       },
       "indexes": {},
