@@ -36,7 +36,7 @@ export const shortenURLFormAction = async (
   if (existingUri) {
     return {
       msg: 'URL already shortened!',
-      shortUrl: convertToURL({ baseUrl, shortUrlId: existingUri.shortUrlId }),
+      shortUrl: convertToURL({ shortUrlId: existingUri.shortUrlId }),
     };
   }
 
@@ -48,7 +48,7 @@ export const shortenURLFormAction = async (
       mainUrl: newUrl,
     });
 
-    return { shortUrl: convertToURL({ baseUrl, shortUrlId }) };
+    return { shortUrl: convertToURL({ shortUrlId }) };
   } catch (error) {
     if (error instanceof Error) console.error(error.message);
     else console.error(error);
@@ -78,4 +78,15 @@ export const redirectToMainUrl = async (shortId: string) => {
 
     throw new Error('Error occured while handling redirect');
   }
+};
+
+export const getAllUrls = async () => {
+  const allUrls = await db
+    .select({ url: uri.shortUrlId, mainUrl: uri.mainUrl })
+    .from(uri);
+
+  return allUrls.map((el) => ({
+    ...el,
+    url: convertToURL({ shortUrlId: el.url }),
+  }));
 };
