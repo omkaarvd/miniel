@@ -5,6 +5,7 @@ import { analytics, uri } from '@/db/schema';
 import { convertToURL } from '@/lib/url';
 import { nanoid } from 'nanoid';
 import whatwg from 'whatwg-url';
+import { unstable_noStore as noStore } from 'next/cache';
 
 type State = {
   msg?: string;
@@ -81,6 +82,8 @@ export const redirectToMainUrl = async (shortId: string) => {
 };
 
 export const getAllUrls = async () => {
+  noStore();
+
   const allUrls = await db
     .select({ url: uri.shortUrlId, mainUrl: uri.mainUrl })
     .from(uri);
