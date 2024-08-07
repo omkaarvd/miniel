@@ -3,9 +3,10 @@
 import { db } from '@/db';
 import { analytics, uri } from '@/db/schema';
 import { convertToURL } from '@/lib/url';
+import { gte } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import whatwg from 'whatwg-url';
 import { unstable_noStore as noStore } from 'next/cache';
+import whatwg from 'whatwg-url';
 
 type State = {
   msg?: string;
@@ -66,6 +67,10 @@ export const redirectToMainUrl = async (shortId: string) => {
 
     if (!existingUri) return null;
 
+    if (existingUri.expiryTime < new Date()) {
+      return null;
+    }
+
     const { mainUrl, shortUrlId } = existingUri;
 
     await db.insert(analytics).values({
@@ -84,12 +89,23 @@ export const redirectToMainUrl = async (shortId: string) => {
 export const getAllUrls = async () => {
   noStore();
 
-  const allUrls = await db
-    .select({ url: uri.shortUrlId, mainUrl: uri.mainUrl })
-    .from(uri);
+  try {
+    const allUrls = await db
+      .select({
+        url: uri.shortUrlId,
+        mainUrl: uri.mainUrl,
+      })
+      .from(uri)
+      .where(gte(uri.expiryTime, new Date()));
 
-  return allUrls.map((el) => ({
-    ...el,
-    url: convertToURL({ shortUrlId: el.url }),
-  }));
+    return allUrls.map((el) => ({
+      ...el,
+      url: convertToURL({ shortUrlId: el.url }),
+    }));
+  } catch (error) {
+    if (error instanceof Error) console.error(error.message);
+    else console.error(error);
+
+    throw new Error("Error occured while reading all URL's");
+  }
 };
