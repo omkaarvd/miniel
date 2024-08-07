@@ -9,7 +9,7 @@ export const uri = createTable('uri', {
   shortUrlId: text('short_url_id').unique().notNull(),
   mainUrl: text('main_url').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  expiryTime: timestamp('expiry_time').default(getExpiryTime('3hr')),
+  expiryTime: timestamp('expiry_time').default(getExpiryTime('3hr')).notNull(),
 });
 
 export const uriRelations = relations(uri, ({ many }) => ({
