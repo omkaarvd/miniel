@@ -1,26 +1,42 @@
 'use client';
 
+import { updateUrlExpiryAction } from '@/actions/url';
+import { EXPIRY_VALUES, formatDate } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import * as htmlToImage from 'html-to-image';
 import { QrCodeIcon } from 'lucide-react';
 import React from 'react';
 import QRCode from 'react-qr-code';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Card, CardHeader } from './ui/card';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Card, CardHeader } from './ui/card';
-import { cn } from '@/lib/utils';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 
 export default function CopyUrl({
   link,
   mainUrl,
+  expiry,
 }: {
   link: string;
   mainUrl?: string;
+  expiry: Date;
 }) {
   const textRef = React.useRef<HTMLElement>(null);
 
@@ -71,8 +87,20 @@ export default function CopyUrl({
     }
   }
 
+  const isUrlExpired = expiry < new Date();
+
   return (
-    <Card className='flex flex-row items-center justify-between p-0'>
+    <Card className='relative flex flex-row items-center justify-between p-0'>
+      <Badge
+        variant='secondary'
+        className={cn(
+          'absolute -top-3 left-0 text-xs font-normal',
+          isUrlExpired ? 'text-destructive' : 'text-green-600',
+        )}
+      >
+        {formatDate(expiry)}
+      </Badge>
+
       <div className='min-w-0 flex-1'>
         <CardHeader
           className={cn(
@@ -84,57 +112,118 @@ export default function CopyUrl({
             {link}
           </span>
         </CardHeader>
-        {mainUrl ? (
-          <p className='overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs'>
-            {mainUrl}
-          </p>
-        ) : null}
-      </div>
-      <div className='flex flex-shrink-0 flex-row items-center gap-2 p-2 pr-3'>
-        <Button
-          data-copy-to-clipboard-target='copy-text'
-          onClick={() => onCopyBtnClick()}
-        >
-          <span id={defaultMessageId}>Copy</span>
-          <span id={successMessageId} className='hidden items-center'>
-            <svg
-              className='me-1.5 h-3 w-3 text-white'
-              aria-hidden='true'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 16 12'
-            >
-              <path
-                stroke='currentColor'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M1 5.917 5.724 10.5 15 1.5'
-              />
-            </svg>
-            Copied!
-          </span>
-        </Button>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size='icon' className='w-10'>
-              <QrCodeIcon className='size-6' />
+        <p className='overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs'>
+          {mainUrl}
+        </p>
+      </div>
+
+      <div className='flex flex-shrink-0 flex-row items-center gap-2 p-2 pr-3'>
+        {isUrlExpired && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size='sm' variant='outline'>
+                Renew
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              aria-describedby={undefined}
+              className='w-5/6 rounded-lg sm:w-full'
+            >
+              <DialogTitle className='text-base'>Update URL Expiry</DialogTitle>
+
+              <DialogDescription className='flex flex-col gap-4'>
+                <div>
+                  <Label htmlFor='link'>Shortened URL</Label>
+                  <Input value={link} name='link' readOnly />
+                </div>
+
+                <div>
+                  <Label htmlFor='main-url'>Main URL</Label>
+                  <Input value={mainUrl} name='main-url' readOnly />
+                </div>
+
+                <form
+                  action={updateUrlExpiryAction.bind(null, link)}
+                  className='flex flex-col gap-4'
+                >
+                  <div>
+                    <Label htmlFor='expiry'>New URL Expiry</Label>
+
+                    <Select name='expiry' defaultValue='3hr'>
+                      <SelectTrigger className='flex-1'>
+                        <SelectValue placeholder='Expiry' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {EXPIRY_VALUES.map((el) => {
+                          return (
+                            <SelectItem key={el} value={el}>
+                              {el}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <DialogClose asChild>
+                    <Button type='submit'>Update</Button>
+                  </DialogClose>
+                </form>
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {!isUrlExpired && (
+          <>
+            <Button
+              data-copy-to-clipboard-target='copy-text'
+              onClick={() => onCopyBtnClick()}
+              size='sm'
+              variant='outline'
+            >
+              <span id={defaultMessageId}>Copy</span>
+              <span id={successMessageId} className='hidden items-center'>
+                <svg
+                  className='me-1.5 h-3 w-3 text-white'
+                  aria-hidden='true'
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 16 12'
+                >
+                  <path
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M1 5.917 5.724 10.5 15 1.5'
+                  />
+                </svg>
+                Copied!
+              </span>
             </Button>
-          </DialogTrigger>
-          <DialogContent
-            aria-describedby={undefined}
-            className='w-5/6 rounded-lg sm:w-full'
-          >
-            <DialogTitle className='text-base'>{link}</DialogTitle>
-            <div id={qrCodeId} className='mx-auto bg-white p-1'>
-              <QRCode value={link} />
-            </div>
-            <DialogFooter className='mx-auto'>
-              <Button onClick={handleQrDownload}>Download</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size='sm' variant='outline' className='w-10'>
+                  <QrCodeIcon className='size-' />
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                aria-describedby={undefined}
+                className='w-5/6 rounded-lg sm:w-full'
+              >
+                <DialogTitle className='text-base'>{link}</DialogTitle>
+                <div id={qrCodeId} className='mx-auto bg-white p-1'>
+                  <QRCode value={link} />
+                </div>
+                <DialogFooter className='mx-auto'>
+                  <Button onClick={handleQrDownload}>Download</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </div>
     </Card>
   );

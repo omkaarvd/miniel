@@ -2,23 +2,26 @@
 
 import { db } from '@/db';
 import { analytics, uri } from '@/db/schema';
+import { getExpiryTime, TimeLimit } from '@/lib/time';
 import { convertToURL } from '@/lib/url';
-import { gte } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore, revalidatePath } from 'next/cache';
 import whatwg from 'whatwg-url';
 
 type State = {
   msg?: string;
   error?: string;
   shortUrl?: string;
+  expiry?: Date;
+  mainUrl?: string;
 };
 
 export const shortenURLFormAction = async (
   prevState: State,
   formData: FormData,
 ): Promise<State> => {
-  const { url } = Object.fromEntries(formData);
+  const { url, expiry } = Object.fromEntries(formData);
 
   const parsedUrl = whatwg.parseURL(url.toString());
   const baseUrl = whatwg.parseURL(process.env.NEXT_BASE_URL);
@@ -39,6 +42,8 @@ export const shortenURLFormAction = async (
     return {
       msg: 'URL already shortened!',
       shortUrl: convertToURL({ shortUrlId: existingUri.shortUrlId }),
+      expiry: existingUri.expiryTime,
+      mainUrl: existingUri.mainUrl,
     };
   }
 
@@ -48,9 +53,14 @@ export const shortenURLFormAction = async (
     await db.insert(uri).values({
       shortUrlId: shortUrlId,
       mainUrl: newUrl,
+      expiryTime: getExpiryTime(expiry as TimeLimit),
     });
 
-    return { shortUrl: convertToURL({ shortUrlId }) };
+    return {
+      shortUrl: convertToURL({ shortUrlId }),
+      expiry: getExpiryTime(expiry as TimeLimit),
+      mainUrl: newUrl,
+    };
   } catch (error) {
     if (error instanceof Error) console.error(error.message);
     else console.error(error);
@@ -94,9 +104,9 @@ export const getAllUrls = async () => {
       .select({
         url: uri.shortUrlId,
         mainUrl: uri.mainUrl,
+        expiry: uri.expiryTime,
       })
-      .from(uri)
-      .where(gte(uri.expiryTime, new Date()));
+      .from(uri);
 
     return allUrls.map((el) => ({
       ...el,
@@ -108,4 +118,30 @@ export const getAllUrls = async () => {
 
     throw new Error("Error occured while reading all URL's");
   }
+};
+
+export const updateUrlExpiryAction = async (
+  link: string,
+  formData: FormData,
+) => {
+  const { expiry } = Object.fromEntries(formData);
+
+  try {
+    const parts = link.split('/');
+    const shortUrlId = parts[parts.length - 1];
+
+    await db
+      .update(uri)
+      .set({
+        expiryTime: getExpiryTime(expiry as TimeLimit),
+      })
+      .where(eq(uri.shortUrlId, shortUrlId));
+  } catch (error) {
+    if (error instanceof Error) console.error(error.message);
+    else console.error(error);
+
+    throw new Error('Error occured while updating url expiry');
+  }
+
+  revalidatePath('/');
 };

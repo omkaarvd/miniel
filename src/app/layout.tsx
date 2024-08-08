@@ -27,7 +27,7 @@ export default function RootLayout({
 
       <body
         className={cn(
-          'mx-6 mb-24 mt-12 max-w-2xl font-poppins antialiased lg:mx-auto',
+          'mb-24 mt-12 flex flex-col items-center font-poppins antialiased',
           font.variable,
         )}
       >
