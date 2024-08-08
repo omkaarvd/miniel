@@ -1,6 +1,6 @@
 {
-  "id": "a8a0ea9a-456f-4318-a012-0394511dd646",
-  "prevId": "90c23665-b671-4c0f-9688-d371dbb51117",
+  "id": "ae690592-9938-4aea-8a84-271177333491",
+  "prevId": "f79d4e93-27f0-4948-8836-5bbc30cffed7",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -89,7 +89,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-08-07 20:37:00.098'"
+          "default": "'2024-08-08 15:25:08.657'"
         }
       },
       "indexes": {},

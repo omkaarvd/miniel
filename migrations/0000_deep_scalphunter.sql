@@ -2,6 +2,10 @@ CREATE TABLE IF NOT EXISTS "miniel_analytics" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"uri_id" text NOT NULL,
 	"visited_at" timestamp DEFAULT now() NOT NULL,
+	"ip" text NOT NULL,
+	"browser" text NOT NULL,
+	"device" text NOT NULL,
+	"platform" text NOT NULL,
 	CONSTRAINT "miniel_analytics_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
@@ -10,7 +14,7 @@ CREATE TABLE IF NOT EXISTS "miniel_uri" (
 	"short_url_id" text NOT NULL,
 	"main_url" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"expiry_time" timestamp DEFAULT '2024-08-04 22:19:09.947',
+	"expiry_time" timestamp DEFAULT '2024-08-08 15:09:07.736' NOT NULL,
 	CONSTRAINT "miniel_uri_id_unique" UNIQUE("id"),
 	CONSTRAINT "miniel_uri_short_url_id_unique" UNIQUE("short_url_id")
 );
