@@ -38,7 +38,7 @@ export default function CopyUrl({
   mainUrl?: string;
   expiry: Date;
 }) {
-  const textRef = React.useRef<HTMLElement>(null);
+  const textRef = React.useRef<HTMLAnchorElement>(null);
 
   function copyTextToClipboard(text: string) {
     navigator.clipboard
@@ -108,14 +108,23 @@ export default function CopyUrl({
             mainUrl && 'pb-0',
           )}
         >
-          <span ref={textRef} className='block overflow-hidden text-ellipsis'>
+          <a
+            href={`http://${link}`}
+            ref={textRef}
+            target='_blank'
+            className='block overflow-hidden text-ellipsis hover:text-blue-500'
+          >
             {link}
-          </span>
+          </a>
         </CardHeader>
 
-        <p className='overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs'>
+        <a
+          href={mainUrl}
+          target='_blank'
+          className='block overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs hover:text-blue-500'
+        >
           {mainUrl}
-        </p>
+        </a>
       </div>
 
       <div className='flex flex-shrink-0 flex-row items-center gap-2 p-2 pr-3'>
