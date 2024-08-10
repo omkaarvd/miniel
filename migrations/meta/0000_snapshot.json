@@ -1,5 +1,5 @@
 {
-  "id": "f79d4e93-27f0-4948-8836-5bbc30cffed7",
+  "id": "01caa739-b51c-42c4-867e-832d38972f4e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -26,30 +26,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "ip": {
-          "name": "ip",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "browser": {
-          "name": "browser",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "device": {
-          "name": "device",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "platform": {
-          "name": "platform",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
@@ -113,7 +89,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-08-08 15:09:07.736'"
+          "default": "'2024-08-10 18:08:26.310'"
         }
       },
       "indexes": {},
