@@ -23,7 +23,7 @@ export default function URLComponent() {
 
   return (
     <>
-      <form action={formAction} className='mb-4'>
+      <form action={formAction} className='mb-8'>
         <Label htmlFor='url' className='mb-1 block text-sm font-medium'>
           Enter URL
         </Label>
