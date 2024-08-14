@@ -79,9 +79,7 @@ export const redirectToMainUrl = async (shortId: string) => {
 
     const { expiryTime, mainUrl, shortUrlId } = existingUri;
 
-    console.log(existingUri.expiryTime, new Date());
     if (expiryTime < new Date()) {
-      console.log('[Info] URI expired:', shortId);
       return null;
     }
 
