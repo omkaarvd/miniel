@@ -77,11 +77,13 @@ export const redirectToMainUrl = async (shortId: string) => {
 
     if (!existingUri) return null;
 
-    if (existingUri.expiryTime < new Date()) {
+    const { expiryTime, mainUrl, shortUrlId } = existingUri;
+
+    console.log(existingUri.expiryTime, new Date());
+    if (expiryTime < new Date()) {
+      console.log('[Info] URI expired:', shortId);
       return null;
     }
-
-    const { mainUrl, shortUrlId } = existingUri;
 
     await db.insert(analytics).values({
       uriId: shortUrlId,
