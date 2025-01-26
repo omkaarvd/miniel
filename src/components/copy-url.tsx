@@ -4,7 +4,8 @@ import { updateUrlExpiryAction } from '@/actions/url';
 import { EXPIRY_VALUES, formatDate } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import * as htmlToImage from 'html-to-image';
-import { QrCodeIcon } from 'lucide-react';
+import { CheckIcon, QrCodeIcon } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import QRCode from 'react-qr-code';
 import { Badge } from './ui/badge';
@@ -128,7 +129,7 @@ export default function CopyUrl({
       </div>
 
       <div className='flex flex-shrink-0 flex-row items-center gap-2 p-2 pr-3'>
-        {isUrlExpired && (
+        {isUrlExpired ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button size='sm' variant='outline'>
@@ -181,9 +182,7 @@ export default function CopyUrl({
               </DialogDescription>
             </DialogContent>
           </Dialog>
-        )}
-
-        {!isUrlExpired && (
+        ) : (
           <>
             <Button
               data-copy-to-clipboard-target='copy-text'
@@ -193,21 +192,7 @@ export default function CopyUrl({
             >
               <span id={defaultMessageId}>Copy</span>
               <span id={successMessageId} className='hidden items-center'>
-                <svg
-                  className='me-1.5 h-3 w-3 text-white'
-                  aria-hidden='true'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 16 12'
-                >
-                  <path
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M1 5.917 5.724 10.5 15 1.5'
-                  />
-                </svg>
+                <CheckIcon size={18} className='mr-1' />
                 Copied!
               </span>
             </Button>
@@ -215,7 +200,7 @@ export default function CopyUrl({
             <Dialog>
               <DialogTrigger asChild>
                 <Button size='sm' variant='outline' className='w-10'>
-                  <QrCodeIcon className='size-' />
+                  <QrCodeIcon className='scale-125' />
                 </Button>
               </DialogTrigger>
               <DialogContent
@@ -231,6 +216,12 @@ export default function CopyUrl({
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            <Link href={`http://${link}`} target='_blank'>
+              <Button size='sm' variant='outline'>
+                Visit
+              </Button>
+            </Link>
           </>
         )}
       </div>
