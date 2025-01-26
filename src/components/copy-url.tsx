@@ -163,12 +163,16 @@ export default function CopyUrl({
 
               <DialogDescription className='flex flex-col gap-4'>
                 <div>
-                  <Label htmlFor='link'>Shortened URL</Label>
+                  <Label className='text-primary' htmlFor='link'>
+                    Shortened URL
+                  </Label>
                   <Input value={link} name='link' readOnly />
                 </div>
 
                 <div>
-                  <Label htmlFor='main-url'>Main URL</Label>
+                  <Label className='text-primary' htmlFor='main-url'>
+                    Main URL
+                  </Label>
                   <Input value={mainUrl} name='main-url' readOnly />
                 </div>
 
@@ -176,7 +180,7 @@ export default function CopyUrl({
                   action={updateUrlExpiryAction.bind(null, link)}
                   className='flex flex-col gap-4'
                 >
-                  <div>
+                  <div className='text-primary'>
                     <Label htmlFor='expiry'>New URL Expiry</Label>
 
                     <Select name='expiry' defaultValue='3hr'>
