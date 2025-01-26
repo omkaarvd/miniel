@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import React from 'react';
 import QRCode from 'react-qr-code';
+import { toast } from 'sonner';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardHeader } from './ui/card';
@@ -76,6 +77,10 @@ export default function CopyUrl({
         .getElementById(successMessageId)
         ?.classList.remove('inline-flex');
     }, 1000);
+
+    toast('Copied to clipboard', {
+      icon: <CopyCheckIcon size={18} color='green' />,
+    });
   }
 
   function handleQrDownload() {
@@ -98,6 +103,10 @@ export default function CopyUrl({
 
   function onDeleteBtnClick() {
     deleteUrlAction(link);
+
+    toast('URL Deleted', {
+      icon: <Trash2Icon size={18} color='red' />,
+    });
   }
 
   return (
