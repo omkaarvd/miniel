@@ -4,7 +4,7 @@ import { db } from '@/db';
 import { analytics, uri } from '@/db/schema';
 import { getExpiryTime, TimeLimit } from '@/lib/time';
 import { convertToURL } from '@/lib/url';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { unstable_noStore as noStore, revalidatePath } from 'next/cache';
 import whatwg from 'whatwg-url';
@@ -106,7 +106,8 @@ export const getAllUrls = async () => {
         mainUrl: uri.mainUrl,
         expiry: uri.expiryTime,
       })
-      .from(uri);
+      .from(uri)
+      .orderBy(desc(uri.createdAt));
 
     return allUrls.map((el) => ({
       ...el,
