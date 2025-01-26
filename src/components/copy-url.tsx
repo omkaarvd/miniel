@@ -1,10 +1,10 @@
 'use client';
 
-import { updateUrlExpiryAction } from '@/actions/url';
+import { deleteUrlAction, updateUrlExpiryAction } from '@/actions/url';
 import { EXPIRY_VALUES, formatDate } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import * as htmlToImage from 'html-to-image';
-import { CheckIcon, QrCodeIcon } from 'lucide-react';
+import { CheckIcon, QrCodeIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import QRCode from 'react-qr-code';
@@ -89,6 +89,10 @@ export default function CopyUrl({
   }
 
   const isUrlExpired = expiry < new Date();
+
+  function onDeleteBtnClick() {
+    deleteUrlAction(link);
+  }
 
   return (
     <Card className='relative flex flex-row items-center justify-between p-0'>
@@ -224,6 +228,15 @@ export default function CopyUrl({
             </Link>
           </>
         )}
+
+        <Button
+          size='sm'
+          variant='outline'
+          className='w-10'
+          onClick={onDeleteBtnClick}
+        >
+          <Trash2Icon className='scale-125' />
+        </Button>
       </div>
     </Card>
   );

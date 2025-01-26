@@ -145,3 +145,19 @@ export const updateUrlExpiryAction = async (
 
   revalidatePath('/');
 };
+
+export const deleteUrlAction = async (link: string) => {
+  try {
+    const parts = link.split('/');
+    const shortUrlId = parts[parts.length - 1];
+
+    await db.delete(uri).where(eq(uri.shortUrlId, shortUrlId));
+  } catch (error) {
+    if (error instanceof Error) console.error(error.message);
+    else console.error(error);
+
+    throw new Error('Error occured while deleting url');
+  }
+
+  revalidatePath('/');
+};
