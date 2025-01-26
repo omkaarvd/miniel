@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { EXPIRY_VALUES } from '@/lib/time';
+import { useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import {
   Select,
@@ -16,14 +17,20 @@ import {
 } from './ui/select';
 
 export default function URLComponent() {
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [{ error, shortUrl, msg, expiry, mainUrl }, formAction] = useFormState(
-    shortenURLFormAction.bind(null),
+    async (prevState: any, formData: FormData) => {
+      const result = await shortenURLFormAction(prevState, formData);
+      formRef.current?.reset();
+      return result;
+    },
     {},
   );
 
   return (
     <>
-      <form action={formAction} className='mb-8'>
+      <form ref={formRef} action={formAction} className='mb-8'>
         <Label htmlFor='url' className='mb-1 block text-sm font-medium'>
           Enter URL
         </Label>
