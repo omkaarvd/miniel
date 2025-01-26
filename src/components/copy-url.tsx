@@ -132,7 +132,7 @@ export default function CopyUrl({
         <a
           href={mainUrl}
           target='_blank'
-          className='block overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs hover:text-blue-500'
+          className='block max-w-lg overflow-hidden text-ellipsis whitespace-nowrap pb-3 pl-3 text-xs hover:text-blue-500'
         >
           {mainUrl}
         </a>
