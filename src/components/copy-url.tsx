@@ -4,7 +4,13 @@ import { deleteUrlAction, updateUrlExpiryAction } from '@/actions/url';
 import { EXPIRY_VALUES, formatDate } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import * as htmlToImage from 'html-to-image';
-import { CheckIcon, QrCodeIcon, Trash2Icon } from 'lucide-react';
+import {
+  CopyCheckIcon,
+  CopyIcon,
+  ExternalLinkIcon,
+  QrCodeIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import QRCode from 'react-qr-code';
@@ -194,10 +200,11 @@ export default function CopyUrl({
               size='sm'
               variant='outline'
             >
-              <span id={defaultMessageId}>Copy</span>
+              <span id={defaultMessageId}>
+                <CopyIcon size={18} />
+              </span>
               <span id={successMessageId} className='hidden items-center'>
-                <CheckIcon size={18} className='mr-1' />
-                Copied!
+                <CopyCheckIcon size={18} />
               </span>
             </Button>
 
@@ -223,7 +230,7 @@ export default function CopyUrl({
 
             <Link href={`http://${link}`} target='_blank'>
               <Button size='sm' variant='outline'>
-                Visit
+                <ExternalLinkIcon size={18} />
               </Button>
             </Link>
           </>
