@@ -1,10 +1,13 @@
 import { redirectToMainUrl } from '@/actions/url';
 import { db } from '@/db';
+import { uri } from '@/db/schema';
+import { gte } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 
 export async function generateStaticParams() {
   const urls = await db.query.uri.findMany({
     columns: { shortUrlId: true },
+    where: gte(uri.expiryTime, new Date()),
   });
 
   if (!urls) {

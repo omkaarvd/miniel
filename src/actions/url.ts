@@ -72,16 +72,13 @@ export const shortenURLFormAction = async (
 export const redirectToMainUrl = async (shortId: string) => {
   try {
     const existingUri = await db.query.uri.findFirst({
-      where: (uri, { eq }) => eq(uri.shortUrlId, shortId),
+      where: (uri, { eq, and, gte }) =>
+        and(eq(uri.shortUrlId, shortId), gte(uri.expiryTime, new Date())),
     });
 
     if (!existingUri) return null;
 
-    const { expiryTime, mainUrl, shortUrlId } = existingUri;
-
-    if (expiryTime < new Date()) {
-      return null;
-    }
+    const { mainUrl, shortUrlId } = existingUri;
 
     await db.insert(analytics).values({
       uriId: shortUrlId,
